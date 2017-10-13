@@ -77,7 +77,7 @@ func TestBreaker(t *testing.T) {
 			return errors.New("bad")
 		})
 
-		time.Sleep(expiryTimeout)
+		time.Sleep(expiryTimeout + (time.Millisecond * 4))
 
 		err := breaker.Run(func() error {
 			called = true
@@ -91,6 +91,57 @@ func TestBreaker(t *testing.T) {
 			t.Errorf("expected: %t, actual: %t, err: %v", expected, actual, err)
 		}
 	})
+}
+
+func TestBreakerTransitions(t *testing.T) {
+	t.Parallel()
+
+	circuit := breaker.New(3, 100*time.Millisecond)
+
+	// Make sure we trigger an open circuit
+	for i := 0; i < 3; i++ {
+		circuit.Run(func() error {
+			return errors.New("bad")
+		})
+	}
+
+	// Make sure that we're still open
+	if err := circuit.Run(func() error {
+		return nil
+	}); err == nil {
+		t.Fatal("circuit breaker should be open, but isn't!")
+	}
+
+	time.Sleep(110 * time.Millisecond)
+
+	if err := circuit.Run(func() error {
+		return nil
+	}); err != nil {
+		t.Fatal("circuit breaker should be closed, but isn't!")
+	}
+
+	// Make sure we trigger an open circuit
+	for i := 0; i < 3; i++ {
+		circuit.Run(func() error {
+			return errors.New("bad")
+		})
+	}
+
+	time.Sleep(110 * time.Millisecond)
+
+	if err := circuit.Run(func() error {
+		return errors.New("bad")
+	}); err == nil {
+		t.Fatal("circuit breaker should be open, but isn't!")
+	}
+
+	time.Sleep(110 * time.Millisecond)
+
+	if err := circuit.Run(func() error {
+		return nil
+	}); err != nil {
+		t.Fatal("circuit breaker should be closed, but isn't!")
+	}
 }
 
 func Example() {
