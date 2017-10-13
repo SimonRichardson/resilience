@@ -43,6 +43,18 @@ WITNESS:
 	}
 }
 
+func (l *lamportClock) Reset() {
+RESET:
+	cur := atomic.LoadUint64(&l.counter)
+	if cur == 0 {
+		return
+	}
+
+	if !atomic.CompareAndSwapUint64(&l.counter, cur, 0) {
+		goto RESET
+	}
+}
+
 type lamportTime uint64
 
 func (t lamportTime) Value() uint64 {
