@@ -21,11 +21,11 @@ type CircuitBreaker struct {
 	timer      timer.Timer
 }
 
-func New(success, failure uint64, expiry time.Duration) *CircuitBreaker {
+func New(failure uint64, expiry time.Duration) *CircuitBreaker {
 	breaker := &CircuitBreaker{
 		state:      closedState,
 		metrics:    newMetrics(),
-		thresholds: newThresholds(success, failure),
+		thresholds: newThresholds(1, failure),
 	}
 	breaker.timer = timer.NewTimer(expiry, breaker.tick)
 	return breaker
