@@ -7,11 +7,11 @@ import (
 	"github.com/SimonRichardson/resilience/bucket"
 )
 
-func TestBucket(t *testing.T) {
+func TestTokenBucket(t *testing.T) {
 	t.Parallel()
 
 	t.Run("take", func(t *testing.T) {
-		tokens := bucket.New(2)
+		tokens := bucket.NewTokenBucket(2)
 
 		if expected, actual := int64(1), tokens.Take(1); expected != actual {
 			t.Errorf("expected: %d, actual: %d", expected, actual)
@@ -19,7 +19,7 @@ func TestBucket(t *testing.T) {
 	})
 
 	t.Run("multiple takes", func(t *testing.T) {
-		tokens := bucket.New(2)
+		tokens := bucket.NewTokenBucket(2)
 
 		if expected, actual := int64(1), tokens.Take(1); expected != actual {
 			t.Errorf("expected: %d, actual: %d", expected, actual)
@@ -30,7 +30,7 @@ func TestBucket(t *testing.T) {
 	})
 
 	t.Run("put", func(t *testing.T) {
-		tokens := bucket.New(2)
+		tokens := bucket.NewTokenBucket(2)
 
 		if expected, actual := int64(0), tokens.Put(1); expected != actual {
 			t.Errorf("expected: %d, actual: %d", expected, actual)
@@ -38,7 +38,7 @@ func TestBucket(t *testing.T) {
 	})
 
 	t.Run("take then put", func(t *testing.T) {
-		tokens := bucket.New(2)
+		tokens := bucket.NewTokenBucket(2)
 
 		if expected, actual := int64(1), tokens.Take(1); expected != actual {
 			t.Errorf("expected: %d, actual: %d", expected, actual)
@@ -51,7 +51,7 @@ func TestBucket(t *testing.T) {
 }
 
 func Example() {
-	tokens := bucket.New(2)
+	tokens := bucket.NewTokenBucket(2)
 	fmt.Println(tokens.Take(1))
 	fmt.Println(tokens.Take(1))
 	fmt.Println(tokens.Take(0))
