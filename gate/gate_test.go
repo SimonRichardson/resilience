@@ -7,7 +7,7 @@ import (
 	"github.com/SimonRichardson/resilience/gate"
 )
 
-func Test(t *testing.T) {
+func TestGate(t *testing.T) {
 	t.Parallel()
 
 	t.Run("left func called", func(t *testing.T) {
