@@ -48,6 +48,10 @@ WITNESS:
 	}
 }
 
+func (l *timeClock) Clone() Clock {
+	return &timeClock{stamp: atomic.LoadUint64(&l.stamp)}
+}
+
 func (l *timeClock) Reset() {
 RESET:
 	var (

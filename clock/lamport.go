@@ -43,6 +43,10 @@ WITNESS:
 	}
 }
 
+func (l *lamportClock) Clone() Clock {
+	return &lamportClock{counter: atomic.LoadUint64(&l.counter)}
+}
+
 func (l *lamportClock) Reset() {
 RESET:
 	cur := atomic.LoadUint64(&l.counter)

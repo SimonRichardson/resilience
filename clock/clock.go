@@ -13,6 +13,9 @@ type Clock interface {
 	// witnessing a clock value received from another process
 	Witness(Time)
 
+	// Clone a clock with the same local time underneath
+	Clone() Clock
+
 	// Reset the clock
 	Reset()
 }
