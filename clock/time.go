@@ -72,3 +72,11 @@ type timeTime uint64
 func (t timeTime) Value() uint64 {
 	return uint64(t)
 }
+
+func (t timeTime) Before(other Time) bool {
+	return uint64(t) < uint64(other.Value())
+}
+
+func (t timeTime) After(other Time) bool {
+	return uint64(t) > uint64(other.Value())
+}

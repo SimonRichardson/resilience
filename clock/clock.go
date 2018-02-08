@@ -23,4 +23,8 @@ type Clock interface {
 // Time is the value of a Clock.
 type Time interface {
 	Value() uint64
+
+	Before(Time) bool
+
+	After(Time) bool
 }

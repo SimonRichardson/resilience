@@ -64,3 +64,11 @@ type lamportTime uint64
 func (t lamportTime) Value() uint64 {
 	return uint64(t)
 }
+
+func (t lamportTime) Before(other Time) bool {
+	return uint64(t) < uint64(other.Value())
+}
+
+func (t lamportTime) After(other Time) bool {
+	return uint64(t) > uint64(other.Value())
+}
